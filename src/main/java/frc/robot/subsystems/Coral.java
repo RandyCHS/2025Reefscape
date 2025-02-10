@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Coral extends SubsystemBase{
     private final SparkMax leftMotor;
@@ -19,6 +21,8 @@ public class Coral extends SubsystemBase{
     private final SparkBaseConfig rightConfig;
     private final DigitalInput beamBrake1;
     private final DigitalInput beamBrake2;
+
+
     public Coral(){
         leftMotor = new SparkMax(Constants.Coral.leftMotorID, MotorType.kBrushless);
         rightMotor = new SparkMax(Constants.Coral.rightMotorID, MotorType.kBrushless);
@@ -28,6 +32,9 @@ public class Coral extends SubsystemBase{
 
         leftConfig.inverted(Constants.Coral.leftMotorInverted);
         rightConfig.inverted(Constants.Coral.rightMotorInverted);
+
+        leftConfig.idleMode(IdleMode.kBrake);
+        rightConfig.idleMode(IdleMode.kBrake);
 
         leftMotor.configure(leftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         rightMotor.configure(rightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
@@ -67,6 +74,10 @@ public class Coral extends SubsystemBase{
     private void loggers() {
         SmartDashboard.putBoolean("beam brake 1", BeamBrake1());
         SmartDashboard.putBoolean("beam brake 2", BeamBrake2());
+    }
+
+    public Command InlineSpinBothCoralMotors(double speed) {
+        return this.runOnce(() -> spinBothMotors(speed));
     }
 
     @Override

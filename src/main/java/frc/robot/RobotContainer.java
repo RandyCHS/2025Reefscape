@@ -273,8 +273,11 @@ public class RobotContainer {
     // button_a.onTrue(goToTag).onFalse(stop);
     m_driverController.a().whileTrue(m_algae.AlgaeIntake(Constants.Algae.motorSpin));
     m_driverController.b().whileTrue(m_algae.AlgaeOuttake(Constants.Algae.motorSpin));
-    m_driverController.x().whileTrue(m_coral.manualMoveCoralMotorsIntake());
     m_driverController.y().whileTrue(m_coral.manualMoveCoralMotorsOutake());
+
+    new Trigger(() -> m_coral.BeamBrake1())
+    .whileTrue(m_coral.InlineSpinBothCoralMotors(Constants.Coral.motorSpeedIntake))
+    .onFalse(m_coral.InlineSpinBothCoralMotors(0));
 
     c_driveStick.leftBumper().toggleOnTrue(new ElevatorManualControl(elevator, ()->c_driveStick.povUp().getAsBoolean(),
         ()->c_driveStick.povDown().getAsBoolean()));
